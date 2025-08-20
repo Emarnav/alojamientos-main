@@ -25,16 +25,8 @@ app.prepare().then(() => {
     allowedHeaders: ["Content-Type", "Authorization"],
   }));
 
-  // Importar y usar las rutas API con debugging
-  const apiModule = require('./server/dist/index.js');
-  console.log('API Module keys:', Object.keys(apiModule));
-  console.log('API Module type:', typeof apiModule);
-  console.log('API Module default:', apiModule.default);
-  console.log('API Module direct:', apiModule);
-  
-  const apiRouter = apiModule.default || apiModule;
-  console.log('Final router type:', typeof apiRouter);
-  console.log('Final router keys:', Object.keys(apiRouter));
+  // Importar y usar las rutas API
+  const apiRouter = require('./server/dist/index.js');
   
   server.use('/api', apiRouter);
 

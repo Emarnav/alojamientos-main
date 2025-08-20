@@ -6,8 +6,8 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
+  extensions = [postgis(schema: "public")]
 }
-
 
 model Alojamiento {
   id                   Int            @id @default(autoincrement())
@@ -59,23 +59,21 @@ model Alojamiento {
 }
 
 model Conversacion {
-  id                        Int         @id @default(autoincrement())
-  alojamientoId             Int
-  createdAt                 DateTime    @default(now())
-  estudianteId              Int
-  propietarioId             Int
-  ultimoMensajeId           Int?
-  estudianteVistoUltimo     Boolean     @default(true)
-  propietarioVistoUltimo    Boolean     @default(false)
-
-  alojamiento               Alojamiento @relation(fields: [alojamientoId], references: [id])
-  estudiante                Usuario     @relation("EstudianteConversaciones", fields: [estudianteId], references: [id])
-  propietario               Usuario     @relation("ConversacionesPropietario", fields: [propietarioId], references: [id])
-  mensajes                  Mensaje[]
+  id                     Int         @id @default(autoincrement())
+  alojamientoId          Int
+  createdAt              DateTime    @default(now())
+  estudianteId           Int
+  propietarioId          Int
+  ultimoMensajeId        Int?
+  estudianteVistoUltimo  Boolean     @default(true)
+  propietarioVistoUltimo Boolean     @default(false)
+  alojamiento            Alojamiento @relation(fields: [alojamientoId], references: [id])
+  estudiante             Usuario     @relation("EstudianteConversaciones", fields: [estudianteId], references: [id])
+  propietario            Usuario     @relation("ConversacionesPropietario", fields: [propietarioId], references: [id])
+  mensajes               Mensaje[]
 
   @@unique([alojamientoId, estudianteId, propietarioId])
 }
-
 
 model Mensaje {
   id             Int          @id @default(autoincrement())
@@ -88,30 +86,38 @@ model Mensaje {
 }
 
 model Usuario {
-  id                         Int            @id @default(autoincrement())
-  cognitoId                  String         @unique
-  nombre                     String
-  email                      String
-  telefono                   String?
-  tipo                       TipoUsuario
-  alojamientos               Alojamiento[]  @relation("PropiedadesDelUsuario")
-  estudianteConversaciones   Conversacion[] @relation("EstudianteConversaciones")
+  id                            Int            @id @default(autoincrement())
+  cognitoId                     String         @unique
+  nombre                        String
+  email                         String
+  telefono                      String?
+  tipo                          TipoUsuario
+  alojamientos                  Alojamiento[]  @relation("PropiedadesDelUsuario")
+  estudianteConversaciones      Conversacion[] @relation("EstudianteConversaciones")
   conversacionesComoPropietario Conversacion[] @relation("ConversacionesPropietario")
-  mensajesRemitidos          Mensaje[]      @relation("MensajesRemitidos")
-  alojamientosFavoritos      Alojamiento[]  @relation("TenantFavorites")
+  mensajesRemitidos             Mensaje[]      @relation("MensajesRemitidos")
+  alojamientosFavoritos         Alojamiento[]  @relation("TenantFavorites")
 }
 
-
 model Ubicacion {
-  id           Int                      @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   direccion    String
   ciudad       String
   provincia    String
   pais         String
   codigoPostal String
-  latitud   Float
-  longitud  Float
+  latitud      Float
+  longitud     Float
   alojamientos Alojamiento[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
 }
 
 enum TipoUsuario {

@@ -52,35 +52,34 @@ const chatRoutes_1 = __importDefault(require("./routes/chatRoutes"));
 const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 /* CONFIGURATIONS */
 dotenv_1.default.config();
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use((0, helmet_1.default)());
-app.use(helmet_1.default.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use((0, morgan_1.default)("common"));
-app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({ extended: false }));
+// Crear router en lugar de app
+const apiRouter = express_1.default.Router();
+// Middleware para el router
+apiRouter.use((0, helmet_1.default)());
+apiRouter.use(helmet_1.default.crossOriginResourcePolicy({ policy: "cross-origin" }));
+apiRouter.use((0, morgan_1.default)("common"));
+apiRouter.use(body_parser_1.default.json());
+apiRouter.use(body_parser_1.default.urlencoded({ extended: false }));
 const allowedOrigins = [
     "https://alojamientos-lemon.vercel.app/",
     process.env.FRONTEND_URL || "http://localhost:3000"
 ];
-app.use((0, cors_1.default)({
+apiRouter.use((0, cors_1.default)({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
 }));
 /* Hacer accesibles las imágenes en /alojamientos */
-app.use(express_1.default.static(path.join(__dirname, "../public")));
+apiRouter.use(express_1.default.static(path.join(__dirname, "../public")));
 /* Rutas */
-app.use("/api/alojamientos", propertyRoutes_1.default);
-app.use("/api/admin", adminRoutes_1.default);
-app.use("/api/estudiante", tenantRoutes_1.default);
-app.use("/api/propietario", managerRoutes_1.default);
-app.use("/api/chat", (0, authMiddleware_1.authMiddleware)(["estudiante", "propietario"]), chatRoutes_1.default);
-/* SERVER */
-const port = Number(process.env.PORT) || 3002;
-app.get("/", (_req, res) => {
+apiRouter.use("/alojamientos", propertyRoutes_1.default);
+apiRouter.use("/admin", adminRoutes_1.default);
+apiRouter.use("/estudiante", tenantRoutes_1.default);
+apiRouter.use("/propietario", managerRoutes_1.default);
+apiRouter.use("/chat", (0, authMiddleware_1.authMiddleware)(["estudiante", "propietario"]), chatRoutes_1.default);
+// Ruta de salud
+apiRouter.get("/", (_req, res) => {
     res.send("API corriendo correctamente");
 });
-app.listen(port, "0.0.0.0", () => {
-    console.log(`Server running on port ${port}`);
-});
+// Exportar el router
+exports.default = apiRouter;

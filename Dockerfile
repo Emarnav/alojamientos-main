@@ -1,7 +1,7 @@
 # Imagen base
 FROM node:20-slim
 
-# Dependencias de sistema para Prisma
+# Dependencias necesarias para Prisma
 RUN apt-get update && apt-get install -y \
     openssl \
     ca-certificates \
@@ -9,29 +9,28 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copiar manifests para cache eficiente
+# Copiamos manifests primero para cache
 COPY package*.json ./
 COPY client/package*.json ./client/
 COPY server/package*.json ./server/
 
-# Instalar dependencias
+# Instalar dependencias en la raíz (dispara postinstall => prisma generate en /app)
 RUN npm install
+
+# Instalar deps del client y server (no instalan prisma otra vez)
 RUN cd client && npm install
 RUN cd server && npm install
 
-# Copiar código
+# Copiar el resto del código
 COPY . .
 
 # Build del frontend (Next.js)
 RUN cd client && npm run build
 
-# Build del backend (si existe script build)
+# (Opcional) Build del backend si tienes script
 RUN cd server && npm run build || echo "No server build step"
 
-# Generar Prisma Client durante el build (usa el schema del backend)
-RUN cd server && npx prisma generate --schema=prisma/schema.prisma
-
-# Crear baseline por si la BD ya tiene tablas (evita P3005 la primera vez)
+# Crear baseline por si la BD ya tiene tablas
 RUN mkdir -p server/prisma/migrations/0000_baseline \
  && echo "-- baseline" > server/prisma/migrations/0000_baseline/migration.sql
 
@@ -42,13 +41,10 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# ⚠️ Prioriza server/node_modules para que @prisma/client cargue el generado ahí
-ENV NODE_PATH=/app/server/node_modules:/app/client/node_modules:/app/node_modules
-
-# Inicio:
-# 1) Genera prisma client en runtime (por si cambia imagen/volúmenes)
-# 2) Aplica migraciones (o marca baseline si es primera vez)
-# 3) Arranca tu server.js (Next + API)
+# Command de arranque:
+# 1) (idempotente) prisma generate en /app usando el schema de server (por si cambió la imagen/env)
+# 2) migrate deploy o baseline si es la primera vez
+# 3) arrancar tu servidor combinado desde la raíz (server.js)
 CMD sh -lc '\
   cd /app && npx prisma generate --schema=server/prisma/schema.prisma && \
   cd server && (npx prisma migrate deploy || npx prisma migrate resolve --applied 0000_baseline) && \

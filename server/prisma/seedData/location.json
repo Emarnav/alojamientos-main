@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Plaça de l'Ajuntament, 1",
+    "postalCode": "46002",
+    "coordinates": "POINT(-0.37739 39.46975)"
+  },
+  {
+    "id": 2,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Carrer de Colón, 31",
+    "postalCode": "46004",
+    "coordinates": "POINT(-0.37582 39.46904)"
+  },
+  {
+    "id": 3,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Avenida del Puerto, 60",
+    "postalCode": "46023",
+    "coordinates": "POINT(-0.34484 39.46178)"
+  },
+  {
+    "id": 4,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Carrer del Marqués de Dos Aigües, 6",
+    "postalCode": "46002",
+    "coordinates": "POINT(-0.37535 39.47307)"
+  },
+  {
+    "id": 5,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Calle de la Paz, 26",
+    "postalCode": "46003",
+    "coordinates": "POINT(-0.37651 39.47349)"
+  },
+  {
+    "id": 6,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Plaza de la Reina, 10",
+    "postalCode": "46001",
+    "coordinates": "POINT(-0.37511 39.47454)"
+  },
+  {
+    "id": 7,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Calle de San Vicente Mártir, 44",
+    "postalCode": "46001",
+    "coordinates": "POINT(-0.37726 39.47063)"
+  },
+  {
+    "id": 8,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Gran Vía del Marqués del Túria, 80",
+    "postalCode": "46005",
+    "coordinates": "POINT(-0.37248 39.46421)"
+  },
+  {
+    "id": 9,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Calle de las Barcas, 15",
+    "postalCode": "46002",
+    "coordinates": "POINT(-0.37492 39.47031)"
+  },
+  {
+    "id": 10,
+    "country": "España",
+    "city": "Valencia",
+    "state": "Valencia",
+    "address": "Avinguda de les Corts Valencianes, 58",
+    "postalCode": "46015",
+    "coordinates": "POINT(-0.40627 39.48909)"
+  }
+]
+

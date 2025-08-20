@@ -1,0 +1,121 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+}
+
+
+model Alojamiento {
+  id                   Int            @id @default(autoincrement())
+  estado               String         @default("Pendiente")
+  motivoRechazo        String?
+  photoUrls            String[]
+  postedDate           DateTime       @default(now())
+  aguaIncluido         Boolean        @default(false)
+  descripcion          String
+  electricidadIncluido Boolean        @default(false)
+  gasIncluido          Boolean        @default(false)
+  habitaciones         Int
+  hayAireAcondicionado Boolean        @default(false)
+  hayAscensor          Boolean        @default(false)
+  hayCalefaccion       Boolean        @default(false)
+  hayGaraje            Boolean        @default(false)
+  hayGas               Boolean        @default(false)
+  hayGimnasio          Boolean        @default(false)
+  hayHorno             Boolean        @default(false)
+  hayInternet          Boolean        @default(false)
+  hayLavadora          Boolean        @default(false)
+  hayLavavajillas      Boolean        @default(false)
+  hayMicroondas        Boolean        @default(false)
+  hayMuebles           Boolean        @default(false)
+  hayNevera            Boolean        @default(false)
+  hayPiscina           Boolean        @default(false)
+  hayPortero           Boolean        @default(false)
+  haySecadora          Boolean        @default(false)
+  hayTelefono          Boolean        @default(false)
+  hayTelevision        Boolean        @default(false)
+  hayTerraza           Boolean        @default(false)
+  hayZonaComunitaria   Boolean        @default(false)
+  internetIncluido     Boolean        @default(false)
+  nombre               String
+  precio               Float
+  superficie           Int
+  plazasLibres         Int
+  banos                Float
+  dirigidoA            String
+  infoExtra            String
+  esDestacado          Boolean        @default(false)
+  ubicacionId          Int
+  tipoAlojamiento      String
+  managerUsuarioId     Int
+  propietario          Usuario        @relation("PropiedadesDelUsuario", fields: [managerUsuarioId], references: [id])
+  ubicacion            Ubicacion      @relation(fields: [ubicacionId], references: [id])
+  conversaciones       Conversacion[]
+  favoritedBy          Usuario[]      @relation("TenantFavorites")
+}
+
+model Conversacion {
+  id                        Int         @id @default(autoincrement())
+  alojamientoId             Int
+  createdAt                 DateTime    @default(now())
+  estudianteId              Int
+  propietarioId             Int
+  ultimoMensajeId           Int?
+  estudianteVistoUltimo     Boolean     @default(true)
+  propietarioVistoUltimo    Boolean     @default(false)
+
+  alojamiento               Alojamiento @relation(fields: [alojamientoId], references: [id])
+  estudiante                Usuario     @relation("EstudianteConversaciones", fields: [estudianteId], references: [id])
+  propietario               Usuario     @relation("ConversacionesPropietario", fields: [propietarioId], references: [id])
+  mensajes                  Mensaje[]
+
+  @@unique([alojamientoId, estudianteId, propietarioId])
+}
+
+
+model Mensaje {
+  id             Int          @id @default(autoincrement())
+  contenido      String
+  conversacionId Int
+  createdAt      DateTime     @default(now())
+  emisorId       Int
+  conversacion   Conversacion @relation(fields: [conversacionId], references: [id])
+  emisor         Usuario      @relation("MensajesRemitidos", fields: [emisorId], references: [id])
+}
+
+model Usuario {
+  id                         Int            @id @default(autoincrement())
+  cognitoId                  String         @unique
+  nombre                     String
+  email                      String
+  telefono                   String?
+  tipo                       TipoUsuario
+  alojamientos               Alojamiento[]  @relation("PropiedadesDelUsuario")
+  estudianteConversaciones   Conversacion[] @relation("EstudianteConversaciones")
+  conversacionesComoPropietario Conversacion[] @relation("ConversacionesPropietario")
+  mensajesRemitidos          Mensaje[]      @relation("MensajesRemitidos")
+  alojamientosFavoritos      Alojamiento[]  @relation("TenantFavorites")
+}
+
+
+model Ubicacion {
+  id           Int                      @id @default(autoincrement())
+  direccion    String
+  ciudad       String
+  provincia    String
+  pais         String
+  codigoPostal String
+  latitud   Float
+  longitud  Float
+  alojamientos Alojamiento[]
+}
+
+enum TipoUsuario {
+  Propietario
+  Estudiante
+  Admin
+}

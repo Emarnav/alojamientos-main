@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const chatControllers_1 = require("../controllers/chatControllers");
+const router = (0, express_1.Router)();
+router.post("/mensajes", chatControllers_1.sendMessage);
+router.get("/mensajes/:conversacionId", chatControllers_1.getChatMessages);
+router.post("/conversaciones", chatControllers_1.createOrGetConversacion);
+router.get("/conversaciones", chatControllers_1.getConversacionesUsuario);
+router.patch("/conversaciones/:id/leido", chatControllers_1.marcarComoLeido);
+exports.default = router;

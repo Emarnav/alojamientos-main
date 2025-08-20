@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  alojamientos:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+    volumes:
+      - alojamientos_uploads:/app/server/public
+    restart: unless-stopped
+    depends_on:
+      - database
+
+  database:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: alojamientos
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  alojamientos_uploads:

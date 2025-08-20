@@ -60,8 +60,8 @@ app.use((0, morgan_1.default)("common"));
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 const allowedOrigins = [
-    "http://localhost:3000",
     "https://alojamientos-lemon.vercel.app/",
+    process.env.FRONTEND_URL || "http://localhost:3000"
 ];
 app.use((0, cors_1.default)({
     origin: allowedOrigins,

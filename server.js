@@ -15,8 +15,11 @@ app.prepare().then(() => {
   server.use(express.urlencoded({ extended: true }));
 
   // Si tienes rutas propias:
-  const apiRoutes = require('./server/dist/index.js'); 
-  server.use('/api', apiRoutes);
+let apiRoutes = require('./server/dist/index.js');
+apiRoutes = apiRoutes.default || apiRoutes; // si tiene .default lo usamos
+
+server.use('/api', apiRoutes);
+
 
   // Next.js render
   server.all('*', (req, res) => {

@@ -53,9 +53,5 @@ apiRouter.get("/", (_req, res) => {
   res.send("API corriendo correctamente");
 });
 
-// Exportar el router
-export default apiRouter;
-
-// También exportación CommonJS para compatibilidad
+// Exportar el router solo como CommonJS
 module.exports = apiRouter;
-module.exports.default = apiRouter;

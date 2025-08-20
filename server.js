@@ -26,8 +26,7 @@ app.prepare().then(() => {
   }));
 
   // Importar y usar las rutas API
-  const apiRoutes = require('./server/dist/index.js');
-  const apiRouter = apiRoutes.default || apiRoutes;
+  const apiRouter = require('./server/dist/index.js');
   
   server.use('/api', apiRouter);
 

@@ -81,5 +81,5 @@ apiRouter.use("/chat", (0, authMiddleware_1.authMiddleware)(["estudiante", "prop
 apiRouter.get("/", (_req, res) => {
     res.send("API corriendo correctamente");
 });
-// Exportar el router
-exports.default = apiRouter;
+// Exportar el router solo como CommonJS
+module.exports = apiRouter;

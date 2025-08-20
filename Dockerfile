@@ -22,7 +22,7 @@ RUN cd server && npm install --ignore-scripts
 # 3) Copiamos el código fuente
 COPY . .
 
-# 4) Ahora sí: generar Prisma Client (con el schema del backend)
+# 4) Ahora sí: generar Prisma Client (con el schema del backend) en la ubicación correcta
 RUN npx prisma generate --schema=server/prisma/schema.prisma
 
 # 5) Build Next.js
@@ -41,11 +41,9 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # 8) Arranque:
-#    - generate (idempotente) por si cambia entorno
-#    - migrate deploy (o baseline si primera vez)
-#    - lanzar server.js (Next + API)
+#    - migrate deploy (o baseline si primera vez)  
+#    - lanzar server.js (Next + API) - Prisma ya está generado
 CMD ["sh","-lc", "\
-  npx prisma generate --schema=server/prisma/schema.prisma && \
   npx prisma migrate deploy --schema=server/prisma/schema.prisma || \
   npx prisma migrate resolve --applied 0000_baseline --schema=server/prisma/schema.prisma; \
   node server.js \

@@ -55,3 +55,7 @@ apiRouter.get("/", (_req, res) => {
 
 // Exportar el router
 export default apiRouter;
+
+// También exportación CommonJS para compatibilidad
+module.exports = apiRouter;
+module.exports.default = apiRouter;

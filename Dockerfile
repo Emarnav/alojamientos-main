@@ -38,6 +38,9 @@ EXPOSE 3000
 # Variables de entorno
 ENV NODE_ENV=production
 ENV PORT=3000
+# Crear baseline si no existe
+RUN mkdir -p prisma/migrations/0000_baseline && \
+    echo "-- baseline" > prisma/migrations/0000_baseline/migration.sql
 
 # Comando de inicio
 CMD ["sh", "-c", "cd server && npx prisma migrate deploy && cd .. && node server.js"]

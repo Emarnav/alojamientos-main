@@ -14,9 +14,10 @@ COPY client/package*.json ./client/
 COPY server/package*.json ./server/
 
 # 2) Instalar deps SIN scripts (evita postinstall antes de tener el schema)
-RUN npm ci --ignore-scripts
-RUN cd client && npm ci --ignore-scripts
-RUN cd server && npm ci --ignore-scripts
+RUN npm install --ignore-scripts
+RUN cd client && npm install --ignore-scripts
+RUN cd server && npm install --ignore-scripts
+
 
 # 3) Copiamos el código fuente
 COPY . .

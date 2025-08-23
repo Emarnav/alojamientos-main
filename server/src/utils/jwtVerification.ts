@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import jwksClient from "jwks-client";
+import jwksClient, { JwksClient } from "jwks-client";
 
 interface CognitoTokenPayload extends JwtPayload {
   sub: string;
@@ -10,17 +10,32 @@ interface CognitoTokenPayload extends JwtPayload {
 }
 
 // Cliente JWKS para obtener las claves públicas de Cognito
-const client = jwksClient({
-  jwksUri: `https://cognito-idp.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
-  cache: true,
-  cacheMaxEntries: 5,
-  cacheMaxAge: 600000, // 10 minutos
-});
+let client: JwksClient;
+
+const initializeClient = () => {
+  if (!client) {
+    const region = process.env.AWS_REGION || 'us-east-1';
+    const userPoolId = process.env.COGNITO_USER_POOL_ID;
+    
+    if (!userPoolId) {
+      throw new Error('COGNITO_USER_POOL_ID environment variable is required');
+    }
+
+    client = jwksClient({
+      jwksUri: `https://cognito-idp.${region}.amazonaws.com/${userPoolId}/.well-known/jwks.json`,
+      cache: true,
+      cacheMaxEntries: 5,
+      cacheMaxAge: 600000, // 10 minutos
+    });
+  }
+  return client;
+};
 
 // Función para obtener la clave de firma
 const getSigningKey = (kid: string): Promise<string> => {
   return new Promise((resolve, reject) => {
-    client.getSigningKey(kid, (err, key) => {
+    const jwksClient = initializeClient();
+    jwksClient.getSigningKey(kid, (err: Error | null, key?: any) => {
       if (err) {
         reject(err);
       } else {

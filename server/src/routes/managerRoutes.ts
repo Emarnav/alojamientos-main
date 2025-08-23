@@ -5,16 +5,16 @@ import {
   updateManager,
   getManagerProperties,
 } from "../controllers/managerControllers";
-import { authMiddleware, extractUserFromToken } from "../middleware/authMiddleware";
+import { testAuthMiddleware, testExtractUserFromToken } from "../middleware/testAuthMiddleware";
 
 const router = express.Router();
 
 // Rutas protegidas
-router.get("/:cognitoId", authMiddleware(["propietario"]), getManager);
-router.put("/:cognitoId", authMiddleware(["propietario"]), updateManager);
-router.get("/:cognitoId/alojamientos", authMiddleware(["propietario"]), getManagerProperties);
+router.get("/:cognitoId", testAuthMiddleware(["propietario"]), getManager);
+router.put("/:cognitoId", testAuthMiddleware(["propietario"]), updateManager);
+router.get("/:cognitoId/alojamientos", testAuthMiddleware(["propietario"]), getManagerProperties);
 
 // Ruta abierta para registro (sin necesidad de que exista en la BD todavía)
-router.post("/", extractUserFromToken, createManager);
+router.post("/", testExtractUserFromToken, createManager);
 
 export default router;

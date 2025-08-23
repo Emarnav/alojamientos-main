@@ -6,14 +6,14 @@ import {
   updateProperty,
   deleteProperty,
 } from "../controllers/propertyControllers";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { testAuthMiddleware } from "../middleware/testAuthMiddleware";
 
 const router = express.Router();
 
 router.get("/", getProperties);
 router.get("/:id", getProperty);
-router.post("/", authMiddleware(["propietario"]), createProperty);
-router.put("/:id", authMiddleware(["propietario", "admin"]), updateProperty);
-router.delete("/:id", authMiddleware(["propietario"]), deleteProperty);
+router.post("/", testAuthMiddleware(["propietario"]), createProperty);
+router.put("/:id", testAuthMiddleware(["propietario", "admin"]), updateProperty);
+router.delete("/:id", testAuthMiddleware(["propietario"]), deleteProperty);
 
 export default router;

@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import TestUserSelector from "@/components/TestUserSelector";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
           <div>
             <SidebarProvider>
               <Navbar />
+              <TestUserSelector />
               <main
                 className="h-full w-full flex flex-col"
                 style={{ paddingTop: `${NAVBAR_HEIGHT}px` }}

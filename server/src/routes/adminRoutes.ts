@@ -5,13 +5,13 @@ import {
   aprobarAlojamiento,
   rechazarAlojamiento,
 } from "../controllers/adminControllers";
-import { testAuthMiddleware } from "../middleware/testAuthMiddleware";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.get("/alojamientos", testAuthMiddleware(["admin"]), getAlojamientosPendientes); 
+router.get("/alojamientos", authMiddleware(["admin"]), getAlojamientosPendientes); 
 router.get("/:cognitoId", getAdmin);
-router.put("/alojamientos/:id/aprobar", testAuthMiddleware(["admin"]), aprobarAlojamiento);
-router.put("/alojamientos/:id/rechazar", testAuthMiddleware(["admin"]), rechazarAlojamiento);
+router.put("/alojamientos/:id/aprobar", authMiddleware(["admin"]), aprobarAlojamiento);
+router.put("/alojamientos/:id/rechazar", authMiddleware(["admin"]), rechazarAlojamiento);
 
 export default router;
